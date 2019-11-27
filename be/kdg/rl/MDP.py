@@ -1,0 +1,36 @@
+import numpy
+
+from be.kdg.rl import Percept
+
+
+class MDP:
+    def __init__(self, observation_space_size, action_space_size):
+        self.R = numpy.zeros(observation_space_size, dtype=int)
+        self.Nsa = numpy.zeros((observation_space_size, action_space_size), dtype=int)
+        self.Ntsa = numpy.zeros((observation_space_size, action_space_size, observation_space_size), dtype=int)
+        self.Ptsa = numpy.zeros((observation_space_size, action_space_size, observation_space_size))
+
+    def update(self, percept: Percept):
+        # update R,Nsa, Ntsa, Ptsa with percept info
+        self.update_R(percept.r, percept.st)
+        self.update_Nsa(percept.s, percept.a)
+        self.update_Ntsa(percept.s, percept.a, percept.st)
+        self.update_Ptsa(percept.s, percept.a, percept.st)
+
+    def update_R(self, r, st):
+        self.R[st] = r
+
+    def update_Nsa(self, s, a):
+        self.Nsa[s][a] += 1
+
+    def update_Ntsa(self, s, a, st):
+        self.Ntsa[s][a][st] += 1
+
+    def update_Ptsa(self, s, a, st):
+        state_action_count = self.Nsa[s][a]
+        state_action_new_states_counts = self.Ntsa[s][a]
+        state_action_new_states_probabilities = self.Ptsa[s][a]
+
+        for new_state_id in range(len(state_action_new_states_counts)):
+            state_action_new_states_probabilities[new_state_id] = state_action_new_states_counts[
+                                                                      new_state_id] / state_action_count
