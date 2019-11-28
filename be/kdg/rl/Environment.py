@@ -28,4 +28,5 @@ class Environment(gym.Wrapper):
     def step(self, a):
         t, r, final, info = super().step(a)
         percept = Percept(self.s, a, r, t, final)
+        self._s = t
         return percept

@@ -8,3 +8,7 @@ class Percept:
         self.r = r
         self.t = t
         self.final = final
+
+    def __repr__(self):
+        return "state: " + str(self.s) + "\naction: " + str(self.a) + "\nreward: " + str(self.r) + "\nnext state: " \
+               + str(self.t) + "\nfinal: " + str(self.final)
