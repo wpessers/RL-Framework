@@ -26,6 +26,6 @@ class Environment(gym.Wrapper):
         return self.observation_space.n
 
     def step(self, a):
-        st, r, final, info = super().step(a)
-        percept = Percept(self.s, a, r, st, final)
+        t, r, final, info = super().step(a)
+        percept = Percept(self.s, a, r, t, final)
         return percept
