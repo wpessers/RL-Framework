@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     for x in range(50):
         test = environment.step(1)
-        environment.env.render()
+        environment.render()
         print(test.s, test.a, test.r, test.st, test.final)
 
     mdp.update(Percept(0, 2, 1, 1, False))
