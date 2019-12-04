@@ -17,6 +17,7 @@ class Agent:
         return self._environment
 
     def learn(self, n_episodes):
+        #TODO MDP meegeven aan QLearnStrategy of environment meegeven?
         mdp = MDP(self.environment.observation_space_size, self.environment.action_space_size)
         episode_count = 0
         for episode_count in range(n_episodes):
