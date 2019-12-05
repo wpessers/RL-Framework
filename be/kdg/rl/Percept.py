@@ -2,6 +2,7 @@ import numpy
 
 
 class Percept:
+    #TODO: Hier datatypes bijvoegen?
     def __init__(self, s, a, r, t, final):
         self.s = s
         self.a = a

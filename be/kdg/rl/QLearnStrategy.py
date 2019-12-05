@@ -16,7 +16,7 @@ class QLearnStrategy(LearningStrategy):
 
     def evaluate(self, percept):
         self.mdp.update(percept)
-
+        self.qsa = self.qsa + (self.α * ())
 
     def improve(self):
         #TODO do something
