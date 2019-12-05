@@ -1,3 +1,5 @@
+import numpy as np
+
 from be.kdg.rl.Agent import Agent
 from be.kdg.rl.Environment import Environment
 from be.kdg.rl.MDP import MDP
@@ -12,6 +14,7 @@ if __name__ == "__main__":
     agent = Agent(0, environment)
 
     agent.learn(5)
+
 
     '''
     for x in range(50):

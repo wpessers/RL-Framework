@@ -12,12 +12,12 @@ class MDP:
 
     def update(self, percept: Percept):
         # update R,Nsa, Ntsa, Ptsa with percept info
-        self.update_R(percept.r, percept.t)
+        self.update_Rtsa(percept.s, percept.a, percept.t, percept.r)
         self.update_Nsa(percept.s, percept.a)
         self.update_Ntsa(percept.s, percept.a, percept.t)
         self.update_Ptsa(percept.s, percept.a, percept.t)
 
-    def update_R(self, s, a, t, r):
+    def update_Rtsa(self, s, a, t, r):
         self.Rtsa[s][a][t] = ((self.Rtsa[s][a][t] * self.Ntsa[s][a][t]) + r) / (self.Ntsa[s][a][t] + 1)
 
     def update_Nsa(self, s, a):
