@@ -5,6 +5,9 @@ from be.kdg.rl import Percept
 
 class MDP:
     def __init__(self, observation_space_size, action_space_size):
+        #TODO: Vragen aan Wouter:
+        self._observation_space_size = observation_space_size
+        self.action_space_size = action_space_size
         self._Rtsa = numpy.zeros((observation_space_size, action_space_size, observation_space_size), dtype=int)
         self._Nsa = numpy.zeros((observation_space_size, action_space_size), dtype=int)
         self._Ntsa = numpy.zeros((observation_space_size, action_space_size, observation_space_size), dtype=int)
@@ -32,6 +35,10 @@ class MDP:
     @property
     def Ptsa(self):
         return self._Ptsa
+
+    @property
+    def observation_space_size(self):
+        return self._observation_space_size
 
     def update_Rtsa(self, s, a, t, r):
         self._Rtsa[s][a][t] = ((self.Rtsa[s][a][t] * self.Ntsa[s][a][t]) + r) / (self.Ntsa[s][a][t] + 1)

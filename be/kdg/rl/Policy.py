@@ -10,3 +10,7 @@ class Policy:
     @property
     def π(self):
         return self._π
+
+    @π.setter
+    def π(self, value):
+        self._π = value

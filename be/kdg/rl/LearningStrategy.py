@@ -21,6 +21,10 @@ class LearningStrategy:
     def ε(self):
         return self._ε
 
+    @ε.setter
+    def ε(self, value):
+        self._ε = value
+
     @property
     def εmax(self):
         return self._εmax
