@@ -21,6 +21,7 @@ class Agent:
         mdp = MDP(self.environment.observation_space_size, self.environment.action_space_size)
         episode_count = 0
         for episode_count in range(n_episodes):
+            #TODO: gebrik episode count
             episode = Episode()
             state = self.environment.s
 

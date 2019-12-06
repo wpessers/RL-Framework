@@ -14,8 +14,7 @@ class QLearnStrategy(LearningStrategy):
         self.policy = policy
 
     def evaluate(self, percept):
-        self.percept = percept
-        s, a, t = self.percept.s, self.percept.a, self.percept.t
+        s, a, t = percept.s, percept.a, percept.t
         self.mdp.update(percept)
         self.q[s][a] = \
             self.q[s][a] + (self.α * (self.mdp.Rtsa[s][a][t] + (self.γ * (np.amax(self.q[s]) - self.q[s][a]))))
@@ -32,4 +31,4 @@ class QLearnStrategy(LearningStrategy):
                 elif (self.ε / self.mdp.action_space_size):
                     self.policy.π[s][a] = self.ε / self.mdp.action_space_size
 
-            self.ε = self.εmin + ((self.εmax - self.εmin) * math.exp((-self.λ) * self.percept.t))
+            self.ε = self.εmin + ((self.εmax - self.εmin) * math.exp((-self.λ) * ))
