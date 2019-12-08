@@ -22,7 +22,8 @@ class Agent:
     def learn(self, n_episodes):
         # TODO MDP meegeven aan QLearnStrategy of environment meegeven?
         mdp = MDP(self.environment.observation_space_size, self.environment.action_space_size)
-        learning_strategy = QLearnStrategy(mdp=mdp, α=0.3, γ=0.1, ε=0.005, εmax=0.01, εmin=0.001, policy=self._policy)
+        learning_strategy = QLearnStrategy(mdp=mdp, α=0.2, γ=0.2, ε=0.9, εmax=1, εmin=0, λ=0.5,
+                                           policy=self._policy)
         episode_count = 0
         # gebruikt voor statistieken
         goal_reached_count = 0
@@ -30,6 +31,10 @@ class Agent:
         for episode_count in range(n_episodes):
             episode = Episode()
             state = self.environment.s
+
+            if episode_count == 900:
+                # voor te debuggen
+                print('test')
 
             while not episode.done:
                 # TODO: action uit strategy halen
@@ -44,10 +49,13 @@ class Agent:
             if episode.percepts[-1].r == 1:
                 goal_reached_count += 1
 
-            if (episode_count % 500 == 0) & (episode_count > 0):
+            print_statistics_per_episodes = 50
+            if (episode_count % print_statistics_per_episodes == 0) & (episode_count > 0):
                 print(
-                    'Episode ' + str(episode_count) + ' Achieved goal in last 500 episodes: ' + str(
-                        goal_reached_count) + ' (' + str(goal_reached_count / 500 * 100) + '%)')
+                    'Episode ' + str(episode_count) + ' Achieved goal in last ' + str(
+                        print_statistics_per_episodes) + ' episodes: ' + str(
+                        goal_reached_count) + ' (' + str(
+                        goal_reached_count / print_statistics_per_episodes * 100) + '%)')
                 goal_reached_count = 0
 
             self.environment.reset()

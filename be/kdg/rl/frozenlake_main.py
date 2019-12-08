@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     agent = Agent(0, environment)
 
-    agent.learn(5000)
+    agent.learn(5001)
 
 
     '''

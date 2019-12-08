@@ -1,10 +1,11 @@
 import abc
 
 class LearningStrategy:
-    def __init__(self, α, γ, ε, εmax, εmin):
+    def __init__(self, α, γ, λ, ε, εmax, εmin):
         __metaclass__ = abc.ABCMeta
         self._α = α
         self._γ = γ
+        self._λ = λ
         self._ε = ε
         self._εmax = εmax
         self._εmin = εmin
@@ -12,6 +13,10 @@ class LearningStrategy:
     @property
     def α(self):
         return self._α
+
+    @property
+    def λ(self):
+        return self._λ
 
     @property
     def γ(self):

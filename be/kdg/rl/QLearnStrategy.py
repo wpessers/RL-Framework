@@ -7,8 +7,8 @@ from be.kdg.rl.Policy import Policy
 
 
 class QLearnStrategy(LearningStrategy):
-    def __init__(self, α, γ, ε, εmax, εmin, mdp: MDP, policy: Policy):
-        super().__init__(α, γ, ε, εmax, εmin)
+    def __init__(self, α, γ, λ, ε, εmax, εmin, mdp: MDP, policy: Policy):
+        super().__init__(α, γ, λ, ε, εmax, εmin)
         self.mdp = mdp
         self.q = np.zeros(mdp.Nsa.shape)
         self.policy = policy
@@ -16,26 +16,29 @@ class QLearnStrategy(LearningStrategy):
     def evaluate(self, percept):
         s, a, t = percept.s, percept.a, percept.t
         self.mdp.update(percept)
-        self.q[s][a] = \
-            self.q[s][a] + (self.α * (np.sum(self.mdp.Rtsa[s][a]) + (self.γ * (np.amax(self.q[t]) - self.q[s][a]))))
-        #TODO moeten we de v(s) updaten of niet? Wordt verder niet gebruikt in Q-learning
+        # Gebruik van np.sum(Rtsa[s][a]) of zoals dit?
+        self.q[s][a] = self.q[s][a] + self.α * (self.mdp.Rtsa[s][a][t] + self.γ * (np.max(self.q[t]) - self.q[s][a]))
+        # TODO moeten we de v(s) updaten of niet? Wordt verder niet gebruikt in Q-learning
 
     def improve(self, episode_count):
         for s in range(self.mdp.observation_space_size):
-            # TODO: randomness
             a_ster = self.random_argmax(self.q[s])
             for a in range(len(self.policy.π[s])):
-                if (a == a_ster):
+                if a == a_ster:
                     # TODO: "Verzameling van acties" -> verandert aantal (mogelijke) acties per state???
                     self.policy.π[s][a] = 1 - self.ε + (self.ε / self.mdp.action_space_size)
-                elif (self.ε / self.mdp.action_space_size):
+                #TODO moet dit niet gewoon een else zijn?
+                elif self.ε / self.mdp.action_space_size:
                     self.policy.π[s][a] = self.ε / self.mdp.action_space_size
             # TODO is e  de math.e constante?
-            self.ε = self.εmin + ((self.εmax - self.εmin) * math.exp((-self.γ) * math.e ** (-self.γ * episode_count)))
+            self.ε = self.εmin + (self.εmax - self.εmin) * math.e ** (-self.λ * episode_count)
 
     def next_action(self, s):
-        #TODO check next_action function
-        return self.random_argmax(self.policy.π[s])
+        # TODO change implementation of exploration
+        if np.random.choice([0, 1], p=[self.ε, 1 - self.ε]) == 0:
+            return np.random.choice(range(len(self.policy.π[s])))
+        else:
+            return self.random_argmax(self.policy.π[s])
 
     def random_argmax(self, array):
         return np.random.choice(np.flatnonzero(array == array.max()))
