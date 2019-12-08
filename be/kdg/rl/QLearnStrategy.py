@@ -17,12 +17,13 @@ class QLearnStrategy(LearningStrategy):
         s, a, t = percept.s, percept.a, percept.t
         self.mdp.update(percept)
         self.q[s][a] = \
-            self.q[s][a] + (self.α * (self.mdp.Rtsa[s][a][t] + (self.γ * (np.amax(self.q[s]) - self.q[s][a]))))
+            self.q[s][a] + (self.α * (np.sum(self.mdp.Rtsa[s][a]) + (self.γ * (np.amax(self.q[t]) - self.q[s][a]))))
+        #TODO moeten we de v(s) updaten of niet? Wordt verder niet gebruikt in Q-learning
 
     def improve(self, episode_count):
         for s in range(self.mdp.observation_space_size):
             # TODO: randomness
-            a_ster = np.argmax(self.q[s])
+            a_ster = self.random_argmax(self.q[s])
             for a in range(len(self.policy.π[s])):
                 if (a == a_ster):
                     # TODO: "Verzameling van acties" -> verandert aantal (mogelijke) acties per state???
