@@ -1,10 +1,10 @@
 import abc
 
 class LearningStrategy:
-    def __init__(self, α, λ, ε, εmax, εmin):
+    def __init__(self, α, γ, ε, εmax, εmin):
         __metaclass__ = abc.ABCMeta
         self._α = α
-        self._λ = λ
+        self._γ = γ
         self._ε = ε
         self._εmax = εmax
         self._εmin = εmin
@@ -14,8 +14,8 @@ class LearningStrategy:
         return self._α
 
     @property
-    def λ(self):
-        return self._λ
+    def γ(self):
+        return self._γ
     
     @property
     def ε(self):
@@ -33,14 +33,18 @@ class LearningStrategy:
     def εmin(self):
         return self._εmin
 
-    def learn(self, percept):
+    def learn(self, percept, eposiode_count):
         self.evaluate(percept)
-        self.improve()
+        self.improve(eposiode_count)
 
     @abc.abstractmethod
-    def improve(self):
+    def improve(self, episode_count):
         return
 
     @abc.abstractmethod
     def evaluate(self, percept):
+        return
+
+    @abc.abstractmethod
+    def next_action(self, s):
         return
