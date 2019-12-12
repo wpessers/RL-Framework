@@ -6,14 +6,9 @@ from be.kdg.rl.MDP import MDP
 from be.kdg.rl.Percept import Percept
 
 if __name__ == "__main__":
-
     environment = Environment()
-
-    mdp = MDP(environment.observation_space_size, environment.action_space_size)
-
     agent = Agent(0, environment)
-
-    agent.learn(5001)
+    agent.learn(10001)
 
 
     '''

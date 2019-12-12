@@ -1,12 +1,12 @@
 import abc
 
 class LearningStrategy:
-    def __init__(self, α, γ, λ, ε, εmax, εmin):
+    def __init__(self, α, γ, λ, εmax, εmin):
         __metaclass__ = abc.ABCMeta
         self._α = α
         self._γ = γ
         self._λ = λ
-        self._ε = ε
+        self._ε = εmax
         self._εmax = εmax
         self._εmin = εmin
 
