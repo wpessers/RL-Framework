@@ -1,59 +1,27 @@
-import numpy
-from tabulate import tabulate
+import numpy as np
 
 from be.kdg.rl import Percept
+
+'''
+    - t = s' (=> observation_space_size)
+    - s = s (=> observation_space_size)
+    - a = a (=> action_space_size)
+'''
 
 
 class MDP:
     def __init__(self, observation_space_size, action_space_size):
-        self._observation_space_size = observation_space_size
-        self.action_space_size = action_space_size
-        self._Rtsa = numpy.zeros((observation_space_size, action_space_size, observation_space_size))
-        self._Nsa = numpy.zeros((observation_space_size, action_space_size), dtype=int)
-        self._Ntsa = numpy.zeros((observation_space_size, action_space_size, observation_space_size), dtype=int)
-        self._Ptsa = numpy.zeros((observation_space_size, action_space_size, observation_space_size))
+        self.Rtsa = np.zeros((observation_space_size, observation_space_size, action_space_size))
+        self.Nsa = np.zeros((observation_space_size, action_space_size), dtype=int)
+        self.Ntsa = np.zeros((observation_space_size, observation_space_size, action_space_size), dtype=int)
+        self.Ptsa = np.zeros((observation_space_size, observation_space_size, action_space_size), dtype=float)
 
     def update(self, percept: Percept):
-        # update R,Nsa, Ntsa, Ptsa with percept info
-        self.update_Rtsa(percept.s, percept.a, percept.t, percept.r)
-        self.update_Nsa(percept.s, percept.a)
-        self.update_Ntsa(percept.s, percept.a, percept.t)
-        self.update_Ptsa(percept.s, percept.a, percept.t)
+        self.Rtsa[percept.next_state, percept.state, percept.action] = percept.reward
+        self.Nsa[percept.state, percept.action] += 1
+        self.Ntsa[percept.next_state, percept.state, percept.action] += 1
 
-    @property
-    def Rtsa(self):
-        return self._Rtsa
-
-    @property
-    def Nsa(self):
-        return self._Nsa
-
-    @property
-    def Ntsa(self):
-        return self._Ntsa
-
-    @property
-    def Ptsa(self):
-        return self._Ptsa
-
-    @property
-    def observation_space_size(self):
-        return self._observation_space_size
-
-    def update_Rtsa(self, s, a, t, r):
-        self._Rtsa[s][a][t] = ((self.Rtsa[s][a][t] * self.Ntsa[s][a][t]) + r) / (self.Ntsa[s][a][t] + 1)
-
-    def update_Nsa(self, s, a):
-        self._Nsa[s][a] += 1
-
-    def update_Ntsa(self, s, a, t):
-        self._Ntsa[s][a][t] += 1
-
-    def update_Ptsa(self, s, a, t):
-        state_action_count = self._Nsa[s][a]
-        state_action_new_states_counts = self._Ntsa[s][a]
-        state_action_new_states_probabilities = self._Ptsa[s][a]
-
-        for new_state_id in range(len(state_action_new_states_counts)):
-            state_action_new_states_probabilities[new_state_id] = state_action_new_states_counts[
-                                                                      new_state_id] / state_action_count
+        for action in range(len(self.Ptsa[percept.next_state, percept.state])):
+            if self.Nsa[percept.state, action] != 0:
+                self.Ptsa[percept.next_state, percept.state, action] = \
+                    self.Ntsa[percept.next_state, percept.state, action] / self.Nsa[percept.state, action]

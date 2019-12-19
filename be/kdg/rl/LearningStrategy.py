@@ -1,46 +1,59 @@
 import abc
 
+from be.kdg.rl.Percept import Percept
+
+'''
+    - α : learning_rate
+    - γ : discount_factor
+    - λ : exploration_decay_rate
+    - ε : exploration_rate
+    - π : policy
+'''
+
+
 class LearningStrategy:
-    def __init__(self, α, γ, λ, εmax, εmin):
+    def __init__(self, learning_rate, discount_factor, exploration_decay_rate, min_exploration_rate,
+                 max_exploration_rate, policy):
         __metaclass__ = abc.ABCMeta
-        self._α = α
-        self._γ = γ
-        self._λ = λ
-        self._ε = εmax
-        self._εmax = εmax
-        self._εmin = εmin
+        self._learning_rate = learning_rate
+        self._discount_factor = discount_factor
+        self._exploration_decay_rate = exploration_decay_rate
+        self._exploration_rate = max_exploration_rate
+        self._min_exploration_rate = min_exploration_rate
+        self._max_exploration_rate = max_exploration_rate
+        self._policy = policy
 
     @property
-    def α(self):
-        return self._α
+    def learning_rate(self):
+        return self._learning_rate
 
     @property
-    def λ(self):
-        return self._λ
+    def discount_factor(self):
+        return self._discount_factor
 
     @property
-    def γ(self):
-        return self._γ
-    
-    @property
-    def ε(self):
-        return self._ε
-
-    @ε.setter
-    def ε(self, value):
-        self._ε = value
+    def eploration_decay_rate(self):
+        return self._exploration_decay_rate
 
     @property
-    def εmax(self):
-        return self._εmax
+    def eploration_rate(self):
+        return self._exploration_rate
 
     @property
-    def εmin(self):
-        return self._εmin
+    def min_eploration_decay_rate(self):
+        return self._min_exploration_rate
 
-    def learn(self, percept, eposiode_count):
+    @property
+    def max_eploration_decay_rate(self):
+        return self._max_exploration_rate
+
+    @property
+    def policy(self):
+        return self._policy
+
+    def learn(self, percept: Percept, episode_count):
         self.evaluate(percept)
-        self.improve(eposiode_count)
+        self.improve(episode_count)
 
     @abc.abstractmethod
     def improve(self, episode_count):
@@ -51,5 +64,5 @@ class LearningStrategy:
         return
 
     @abc.abstractmethod
-    def next_action(self, s):
+    def next_action(self, state):
         return

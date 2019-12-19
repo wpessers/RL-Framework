@@ -1,36 +1,31 @@
-import numpy
-
-
 class Percept:
-    #TODO: Hier datatypes bijvoegen?
-    def __init__(self, s, a, r, t, final):
-        self._s = s
-        self._a = a
-        self._r = r
-        self._t = t
+    def __init__(self, state, action, next_state, reward, final):
+        self._state = state
+        self._action = action
+        self._next_state = next_state
+        self._reward = reward
         self._final = final
 
     @property
-    def s(self):
-        return self._s
+    def state(self):
+        return self._state
 
     @property
-    def a(self):
-        return self._a
+    def action(self):
+        return self._action
 
     @property
-    def r(self):
-        return self._r
+    def next_state(self):
+        return self._next_state
 
     @property
-    def t(self):
-        return self._t
+    def reward(self):
+        return self._reward
 
     @property
     def final(self):
         return self._final
 
-
     def __repr__(self):
-        return "state: " + str(self.s) + "\naction: " + str(self.a) + "\nreward: " + str(self.r) + "\nnext state: " \
-               + str(self.t) + "\nfinal: " + str(self.final)
+        return "state: " + str(self.state) + "\naction: " + str(self.action) + "\nreward: " + str(self.reward) \
+               + "\nnext state: " + str(self.next_state) + "\nfinal: " + str(self.final)
