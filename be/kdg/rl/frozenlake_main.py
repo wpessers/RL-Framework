@@ -1,7 +1,6 @@
 import random
 import numpy as np
 
-from be.kdg.rl.Policy import Policy
 from be.kdg.rl.Agent import Agent
 from be.kdg.rl.Environment import Environment
 from be.kdg.rl.MDP import MDP
@@ -14,6 +13,8 @@ def main():
     agent = Agent(0, environment)
     agent.learn(10001)
     '''
+
+    '''
     np.set_printoptions(threshold=np.inf)
 
     environment = Environment()
@@ -22,7 +23,7 @@ def main():
     #print(policy.pi)
 
     environment.render()
-    print("\nstate: " + str(environment.state))
+    print("\nstate: " + str(environment.s))
     print()
 
     qlearn = QLearnStrategy(learning_rate=0.8, discount_factor=0.95, min_exploration_rate=0.0001, max_exploration_rate=1,
@@ -30,7 +31,7 @@ def main():
 
     print(qlearn.qsa)
 
-    for x in range(1000):
+    for x in range(10000):
         test = environment.step(random.randrange(0, 4, 1))
         mdp.update(test)
         print("========\nRENDER #" + str(x))
@@ -46,23 +47,24 @@ def main():
 
         qlearn.evaluate(test)
         print(qlearn.qsa)
-
-        '''
+    
         print("============\nNsa:")
         print(mdp.Nsa)
         print("\n============\nNtsa:")
         print(mdp.Ntsa)
         print("\n============\nPtsa:")
         print(mdp.Ptsa)
-        '''
 
-        '''
         print("\nReward:")
         print(mdp.Rtsa)
-        '''
+    '''
 
-    #print(policy.pi)
-
+    env = Environment()
+    mdp = MDP(env.observation_space.n, env.action_space.n)
+    qlearn = QLearnStrategy(learning_rate=0.8, discount_factor=0.95, exploration_decay_rate=0.01,
+                            min_exploration_rate=0.0001, max_exploration_rate=1, mdp=mdp, env=env)
+    agent = Agent(qlearn, env)
+    agent.learn(20000)
 
 if __name__ == "__main__":
     main()
